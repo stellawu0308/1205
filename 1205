@@ -1,0 +1,124 @@
+cos = []
+
+while True:
+    co = input('請輸入公司代碼：（按Enter結束）')
+    if co == '':
+        break
+    else:
+        cos.append(co)
+api_url = 'https://mops.twse.com.tw/mops/web/ajax_t05st10_ifrs'
+
+
+
+form_data = {'encodeURIComponent': '1',
+             'step': '1',
+             'firstin': '1',
+             'off': '1',
+             'keyword4': '',
+             'code1': '',
+             'TYPEK2': '',
+             'checkbtn': '' ,
+             'queryName': 'co_id',
+             'inpuType': 'co_id',
+             'TYPEK': 'all',
+             'isnew': 'true',
+             'co_id': stk,
+             'year': '',
+             'month': ''}
+from hello import get_soup
+soup = get_soup(api_url, form_data)
+co_name = soup.find_all('table')[1].find('td').text.strip()
+co_name[13:-5]
+rev = soup.find_all('table')[3].find_all('tr')[1].find('td').text.strip()
+mon_growth = soup.find_all('table')[3].find_all('tr')[4].find('td').text.strip()
+yr_growth = soup.find_all('table')[3].find_all('tr')[8].find('td').text.strip()
+datas = []
+
+def rev(stk):
+    api_url = 'https://mops.twse.com.tw/mops/web/ajax_t05st10_ifrs'
+    form_data = {'encodeURIComponent': '1',
+             'step': '1',
+             'firstin': '1',
+             'off': '1',
+             'keyword4': '',
+             'code1': '',
+             'TYPEK2': '',
+             'checkbtn': '' ,
+             'queryName': 'co_id',
+             'inpuType': 'co_id',
+             'TYPEK': 'all',
+             'isnew': 'true',
+             'co_id': stk,
+             'year': '',
+             'month': ''}
+    soup = get_soup(api_url, form_data)
+    data=[]
+    data.append(stk)
+    data.append(soup.find_all('table')[1].find('td').text.strip()[13:-5])
+    data.append(soup.find_all('table')[3].find_all('tr')[1].find('td').text.strip())
+    data.append(soup.find_all('table')[3].find_all('tr')[4].find('td').text.strip())
+    data.append(soup.find_all('table')[3].find_all('tr')[8].find('td').text.strip())
+
+    datas.append(data)
+    return datas
+for co in cos:
+    print(f'正爬取{co}的營收資料...')
+    rev(co)
+import pandas as pd
+
+pf = pd.DataFrame(datas, columns = ['公司代號','公司名稱','本月營收','逐月成長率(%)','同期成長率(%)'])
+import os
+
+path='c:/Users/user/Desktop/'
+
+pf.to_csv('{path}rev.csv')
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service
+from selenium.webdriver.common.by import By
+path = '/Users/wuyanyi/Desktop/chromedriver-mac-arm64/chromedriver'
+service=Service(executable_path=path)
+chrome=webdriver.Chrome(service=service)
+chrome.get('https://mops.twse.com.tw/mops/web/t05st10_ifrs')
+chrome.page_source
+input_xpath='/html/body/center/table/tbody/tr/td/div[4]/table/tbody/tr/td/div/tab
+element = chrome.find_element(By.XPATH, input_xpath)
+element.send_keys('2881')
+button_xpath = '/html/body/center/table/tbody/tr/td/div[4]/table/tbody/tr/td/div/
+button = chrome.find_element(By.XPATH,button_xpath)
+button2_path='/html/body/center/table/tbody/tr/td/div[4]/table/tbody/tr/td/div/table/tbody/tr/td[3]/div/div[5]/div/form/table[1]/tbody/tr[2]/td[3]/input'
+button2=chrome.find_element(By.XPATH,button2_path)
+chrome.page_source
+new_window=None
+original_handles=chrome.window_handles
+original_handles
+for handle in chrome.window_handles:
+    new_window_handle=handle
+print(new_window_handle)
+print(type(new_window_handle))
+chrome.switch_to.window(new_window_handle)
+api_url2 = 'https://mops.twse.com.tw/mops/web/ajax_t05st10_ifrs'
+
+form_data2 ={'encodeURIComponent':'1',
+            'firstin': 'true',
+            'step':'0',
+            'off': '1',
+            'yearmonth': '11210',
+            'TYPEK': 'sii',
+            'year': '112',
+            'month': '10',
+            'co_id': '2881'}
+from hello import get_soup
+soup = get_soup(api_url2,form_data2)
+
+
+
+
+
+
+
+
+
+
+
+
+
